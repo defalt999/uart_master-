@@ -33,7 +33,7 @@ reg[7:0] ctrl_reg;
 reg[7:0] baud_reg;
 
 reg[7:0] mode_reg;
-//
+//000 - default trimite data in
 
 reg[DATA_SIZE-1:0] min_reg;
 reg[DATA_SIZE-1:0] max_reg;
@@ -122,8 +122,13 @@ if((state == SETUP) && ~setup_stable) pslverr_o <= 'd1; else
 always@(posedge clk_i or negedge rst_n)
 if((next_state == ACCESS) && setup_stable) begin
 case(paddr_i)
- 'd0: ctrl_reg <= pwdata_i;
- 'd1: baud_reg <= pwdata_i;
+ 'd0: ctrl_reg      <= pwdata_i;
+ 'd1: baud_reg      <= pwdata_i;
+ 'd2: min_reg       <= pwdata_i;
+ 'd3: max_reg       <= pwdata_i;
+ 'd4: error_msg_reg <= pwdata_i;
+ 'd5: ok_msg_reg    <= pwdata_i;
+ 'd6: mode_reg      <= pwdata_i;
  default: ctrl_reg <= ctrl_reg;
 endcase
 end
@@ -232,8 +237,27 @@ if(uart_state != TX_IDLE) tx_busy <= 'd1; else
 //================================================================================================================   
 
 always @(posedge clk_i or negedge rst_n)
-if(~rst_n)   data_reg <=     'd0; else
-if(~tx_busy) data_reg <= data_in;     
+if(~rst_n) data_reg <= 'd0; else
+case(mode_reg[2:0])
+ 3'b000: if(~tx_busy) data_reg <= data_in; else
+                      data_reg <= data_reg;
+ 3'b001: if(data_in > min_reg) data_reg <=    ok_msg_reg; else
+                               data_reg <= error_msg_reg;
+
+ 3'b010: if(data_in < max_reg) data_reg <=    ok_msg_reg; else
+                               data_reg <= error_msg_reg;
+
+ 3'b011: if(data_in < max_reg && data_in > min_reg) data_reg <=    ok_msg_reg; else
+                                                    data_reg <= error_msg_reg;
+
+
+ 
+
+ default: if(~tx_busy) data_reg <=  data_in; else
+                       data_reg <= data_reg;
+
+endcase 
+
 //================================================================================================================   
 
 endmodule

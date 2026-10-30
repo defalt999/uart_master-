@@ -16,6 +16,12 @@ add wave -noupdate -divider -height 30 <NULL>
 add wave -noupdate -divider -height 30 REGS
 add wave -noupdate /uart_tb/DUT/ctrl_reg
 add wave -noupdate /uart_tb/DUT/baud_reg
+add wave -noupdate /uart_tb/DUT/mode_reg
+add wave -noupdate /uart_tb/DUT/min_reg
+add wave -noupdate /uart_tb/DUT/max_reg
+add wave -noupdate /uart_tb/DUT/error_msg_reg
+add wave -noupdate /uart_tb/DUT/ok_msg_reg
+add wave -noupdate /uart_tb/DUT/data_reg
 add wave -noupdate -divider -height 30 <NULL>
 add wave -noupdate -divider -height 30 UART
 add wave -noupdate /uart_tb/DUT/tx_busy
@@ -24,9 +30,10 @@ add wave -noupdate /uart_tb/DUT/tx_out
 add wave -noupdate /uart_tb/DUT/uart_state
 add wave -noupdate /uart_tb/DUT/data_reg
 add wave -noupdate /uart_tb/DUT/bit_count
+add wave -noupdate -radix unsigned /uart_tb/DUT/data_in
 add wave -noupdate -divider -height 30 <NULL>
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 7} {1763 ps} 0}
+WaveRestoreCursors {{Cursor 7} {323 ps} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 201
 configure wave -valuecolwidth 88
@@ -42,4 +49,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {640 ps} {5451 ps}
+WaveRestoreZoom {187 ps} {733 ps}
